@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — MorseModem</title>
+  <meta name="description" content="Privacy Policy for MorseModem iOS app. No data collected, fully offline, on-device processing.">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-alt: #f5f5f7;
+      --fg: #1d1d1f;
+      --fg-muted: #6e6e73;
+      --accent: #0071e3;
+      --card-border: #e5e5e7;
+      --footer-bg: #f5f5f7;
+    }
+
+    [data-theme="dark"] {
+      --bg: #000000;
+      --bg-alt: #1c1c1e;
+      --fg: #f5f5f7;
+      --fg-muted: #98989d;
+      --accent: #2997ff;
+      --card-border: #38383a;
+      --footer-bg: #1c1c1e;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #000000;
+        --bg-alt: #1c1c1e;
+        --fg: #f5f5f7;
+        --fg-muted: #98989d;
+        --accent: #2997ff;
+        --card-border: #38383a;
+        --footer-bg: #1c1c1e;
+      }
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .nav-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--fg);
+      text-decoration: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .lang-toggle, .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--fg-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+      font-family: inherit;
+    }
+
+    .lang-toggle:hover, .theme-toggle:hover {
+      color: var(--fg);
+      background: var(--bg-alt);
+    }
+
+    .theme-toggle {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 7rem 1.5rem 4rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .effective-date {
+      color: var(--fg-muted);
+      font-size: 0.9rem;
+      margin-bottom: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--fg);
+    }
+
+    ul {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      background: var(--footer-bg);
+      border-top: 1px solid var(--card-border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 0.85rem;
+      color: var(--fg-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    footer a {
+      color: var(--accent);
+    }
+
+    [lang="fr"] .en, [lang="en"] .fr {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">MorseModem</a>
+      <div class="nav-right">
+        <button class="lang-toggle" id="langToggle" aria-label="Toggle language">FR</button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">&#9790;</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- English -->
+    <div class="en">
+      <h1>Privacy Policy</h1>
+      <p class="effective-date">Effective date: January 28, 2026</p>
+
+      <p>MorseModem is developed by Nicolas Lhomme. This privacy policy explains how the app handles your data.</p>
+
+      <h2>No Data Collection</h2>
+      <p>MorseModem does not collect, store, transmit, or share any personal data. The app works entirely offline and on your device.</p>
+
+      <h2>No Analytics or Tracking</h2>
+      <p>The app contains no analytics services, no tracking tools, and no third-party SDKs that collect data. Your usage of the app is completely private.</p>
+
+      <h2>Microphone Access</h2>
+      <p>MorseModem may request access to your device's microphone to decode Morse code from audio. All audio is processed locally on your device and is never recorded, stored, or transmitted anywhere.</p>
+
+      <h2>Local Storage</h2>
+      <p>Message history (encoded and decoded messages) is stored only in on-device local storage using SwiftData. This data never leaves your device and is not transmitted to any server or third party.</p>
+
+      <h2>No Cookies or Web Tracking</h2>
+      <p>MorseModem has no web component and does not use cookies, web beacons, or any other web tracking technologies.</p>
+
+      <h2>No Advertising</h2>
+      <p>The app contains no advertisements and no advertising SDKs.</p>
+
+      <h2>Changes to This Policy</h2>
+      <p>If this privacy policy is updated, the changes will be reflected on this page with an updated effective date.</p>
+
+      <h2>Contact</h2>
+      <p>If you have any questions about this privacy policy, you can contact us at <a href="mailto:contact+morsemodem@lhomme.xyz">contact+morsemodem@lhomme.xyz</a>.</p>
+    </div>
+
+    <!-- French -->
+    <div class="fr">
+      <h1>Politique de confidentialit&eacute;</h1>
+      <p class="effective-date">Date d'entr&eacute;e en vigueur&nbsp;: 28 janvier 2026</p>
+
+      <p>MorseModem est d&eacute;velopp&eacute; par Nicolas Lhomme. Cette politique de confidentialit&eacute; explique comment l'application g&egrave;re vos donn&eacute;es.</p>
+
+      <h2>Aucune collecte de donn&eacute;es</h2>
+      <p>MorseModem ne collecte, ne stocke, ne transmet et ne partage aucune donn&eacute;e personnelle. L'application fonctionne enti&egrave;rement hors ligne et sur votre appareil.</p>
+
+      <h2>Pas d'analyse ni de pistage</h2>
+      <p>L'application ne contient aucun service d'analyse, aucun outil de pistage et aucun SDK tiers collectant des donn&eacute;es. Votre utilisation de l'application est enti&egrave;rement priv&eacute;e.</p>
+
+      <h2>Acc&egrave;s au microphone</h2>
+      <p>MorseModem peut demander l'acc&egrave;s au microphone de votre appareil pour d&eacute;coder du code Morse &agrave; partir d'un signal audio. Tout l'audio est trait&eacute; localement sur votre appareil et n'est jamais enregistr&eacute;, stock&eacute; ou transmis.</p>
+
+      <h2>Stockage local</h2>
+      <p>L'historique des messages (messages encod&eacute;s et d&eacute;cod&eacute;s) est stock&eacute; uniquement dans le stockage local de l'appareil via SwiftData. Ces donn&eacute;es ne quittent jamais votre appareil et ne sont transmises &agrave; aucun serveur ni tiers.</p>
+
+      <h2>Pas de cookies ni de pistage web</h2>
+      <p>MorseModem n'a aucun composant web et n'utilise ni cookies, ni balises web, ni aucune autre technologie de pistage web.</p>
+
+      <h2>Pas de publicit&eacute;</h2>
+      <p>L'application ne contient aucune publicit&eacute; et aucun SDK publicitaire.</p>
+
+      <h2>Modifications de cette politique</h2>
+      <p>Si cette politique de confidentialit&eacute; est mise &agrave; jour, les changements seront refl&eacute;t&eacute;s sur cette page avec une date d'entr&eacute;e en vigueur actualis&eacute;e.</p>
+
+      <h2>Contact</h2>
+      <p>Pour toute question concernant cette politique de confidentialit&eacute;, vous pouvez nous contacter &agrave; <a href="mailto:contact+morsemodem@lhomme.xyz">contact+morsemodem@lhomme.xyz</a>.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p><a href="/">
+      <span class="en">Back to MorseModem</span>
+      <span class="fr">Retour &agrave; MorseModem</span>
+    </a></p>
+    <p>&copy; 2025 Nicolas Lhomme</p>
+  </footer>
+
+  <script>
+    const themeBtn = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    function applyTheme(theme) {
+      if (theme === 'system') {
+        html.removeAttribute('data-theme');
+      } else {
+        html.setAttribute('data-theme', theme);
+      }
+    }
+
+    function getStoredTheme() {
+      return localStorage.getItem('mm-theme') || 'system';
+    }
+
+    function isDark() {
+      const t = getStoredTheme();
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    function updateThemeIcon() {
+      themeBtn.textContent = isDark() ? '\u2600' : '\u263E';
+    }
+
+    applyTheme(getStoredTheme());
+    updateThemeIcon();
+
+    themeBtn.addEventListener('click', function() {
+      const next = isDark() ? 'light' : 'dark';
+      localStorage.setItem('mm-theme', next);
+      applyTheme(next);
+      updateThemeIcon();
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeIcon);
+
+    const langBtn = document.getElementById('langToggle');
+
+    function getLang() {
+      const stored = localStorage.getItem('mm-lang');
+      if (stored) return stored;
+      return navigator.language.startsWith('fr') ? 'fr' : 'en';
+    }
+
+    function setLang(lang) {
+      html.setAttribute('lang', lang);
+      langBtn.textContent = lang === 'en' ? 'FR' : 'EN';
+      localStorage.setItem('mm-lang', lang);
+    }
+
+    setLang(getLang());
+
+    langBtn.addEventListener('click', function() {
+      setLang(getLang() === 'en' ? 'fr' : 'en');
+    });
+  </script>
+</body>
+</html>

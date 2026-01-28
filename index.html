@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MorseModem — Encode. Decode. Learn Morse Code.</title>
+  <meta name="description" content="MorseModem is a free iOS app for encoding and decoding Morse code. Works 100% offline, no data collected, no ads.">
+  <meta name="author" content="Nicolas Lhomme">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-alt: #f5f5f7;
+      --fg: #1d1d1f;
+      --fg-muted: #6e6e73;
+      --accent: #0071e3;
+      --accent-hover: #0062c4;
+      --card-bg: #ffffff;
+      --card-border: #e5e5e7;
+      --hero-wave: #0071e3;
+      --hero-wave-alt: #34c759;
+      --footer-bg: #f5f5f7;
+      --code-bg: #f0f0f2;
+    }
+
+    [data-theme="dark"] {
+      --bg: #000000;
+      --bg-alt: #1c1c1e;
+      --fg: #f5f5f7;
+      --fg-muted: #98989d;
+      --accent: #2997ff;
+      --accent-hover: #40a5ff;
+      --card-bg: #1c1c1e;
+      --card-border: #38383a;
+      --hero-wave: #2997ff;
+      --hero-wave-alt: #30d158;
+      --footer-bg: #1c1c1e;
+      --code-bg: #2c2c2e;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #000000;
+        --bg-alt: #1c1c1e;
+        --fg: #f5f5f7;
+        --fg-muted: #98989d;
+        --accent: #2997ff;
+        --accent-hover: #40a5ff;
+        --card-bg: #1c1c1e;
+        --card-border: #38383a;
+        --hero-wave: #2997ff;
+        --hero-wave-alt: #30d158;
+        --footer-bg: #1c1c1e;
+        --code-bg: #2c2c2e;
+      }
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .nav-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--fg);
+      text-decoration: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .lang-toggle, .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--fg-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+      font-family: inherit;
+    }
+
+    .lang-toggle:hover, .theme-toggle:hover {
+      color: var(--fg);
+      background: var(--bg-alt);
+    }
+
+    .theme-toggle {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    /* Main content */
+    main {
+      padding-top: 52px;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 5rem 1.5rem 4rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .hero-icon {
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-icon svg {
+      width: 96px;
+      height: 96px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero .tagline {
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      color: var(--fg-muted);
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    .app-store-badge {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: var(--fg);
+      color: var(--bg);
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: opacity 0.2s;
+    }
+
+    .app-store-badge:hover {
+      opacity: 0.85;
+    }
+
+    .app-store-badge svg {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 0.4rem;
+      fill: currentColor;
+    }
+
+    /* Morse animation */
+    .morse-display {
+      margin-top: 2rem;
+      font-family: "SF Mono", SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 1.3rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      min-height: 1.8em;
+    }
+
+    /* Features */
+    .features {
+      padding: 4rem 1.5rem;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 2.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--fg-muted);
+      line-height: 1.5;
+    }
+
+    /* Privacy callout */
+    .privacy-callout {
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+
+    .privacy-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      background: var(--bg-alt);
+      border-radius: 20px;
+      padding: 3rem 2rem;
+    }
+
+    .privacy-inner .shield {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .privacy-inner h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .privacy-inner p {
+      color: var(--fg-muted);
+      font-size: 0.95rem;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .privacy-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+
+    .privacy-badge {
+      display: inline-block;
+      padding: 0.4rem 0.85rem;
+      background: var(--code-bg);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      color: var(--fg-muted);
+      font-weight: 500;
+    }
+
+    /* Highlights */
+    .highlights {
+      padding: 3rem 1.5rem 4rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .highlight-item {
+      padding: 1rem;
+    }
+
+    .highlight-item .icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .highlight-item span {
+      font-size: 0.9rem;
+      color: var(--fg-muted);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--footer-bg);
+      border-top: 1px solid var(--card-border);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 0.85rem;
+      color: var(--fg-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+    }
+
+    /* i18n */
+    [lang="fr"] .en, [lang="en"] .fr {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">MorseModem</a>
+      <div class="nav-right">
+        <button class="lang-toggle" id="langToggle" aria-label="Toggle language">FR</button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">&#9790;</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-icon">
+        <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Waveform icon">
+          <circle cx="48" cy="48" r="46" stroke="var(--hero-wave)" stroke-width="3" fill="none"/>
+          <g stroke="var(--hero-wave)" stroke-width="2.8" stroke-linecap="round">
+            <line x1="22" y1="48" x2="22" y2="48"/>
+            <line x1="28" y1="38" x2="28" y2="58"/>
+            <line x1="34" y1="30" x2="34" y2="66"/>
+            <line x1="40" y1="36" x2="40" y2="60"/>
+            <line x1="46" y1="24" x2="46" y2="72"/>
+            <line x1="52" y1="34" x2="52" y2="62"/>
+            <line x1="58" y1="28" x2="58" y2="68"/>
+            <line x1="64" y1="38" x2="64" y2="58"/>
+            <line x1="70" y1="42" x2="70" y2="54"/>
+            <line x1="76" y1="48" x2="76" y2="48"/>
+          </g>
+        </svg>
+      </div>
+      <h1>MorseModem</h1>
+      <p class="tagline">
+        <span class="en">Encode. Decode. Learn Morse Code.</span>
+        <span class="fr">Encoder. D&eacute;coder. Apprendre le Morse.</span>
+      </p>
+      <a href="#" class="app-store-badge" aria-label="Download on the App Store">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        <span class="en">Download on the App Store</span>
+        <span class="fr">T&eacute;l&eacute;charger sur l'App Store</span>
+      </a>
+      <div class="morse-display" id="morseDisplay" aria-hidden="true"></div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+      <h2>
+        <span class="en">Features</span>
+        <span class="fr">Fonctionnalit&eacute;s</span>
+      </h2>
+      <div class="features-grid">
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">&#9998;</span>
+          <h3>
+            <span class="en">Encoder</span>
+            <span class="fr">Encodeur</span>
+          </h3>
+          <p>
+            <span class="en">Type text and convert it to Morse code. Play it as audio with haptic feedback, or export it as an audio file to share.</span>
+            <span class="fr">Saisissez du texte et convertissez-le en code Morse. &Eacute;coutez-le avec retour haptique ou exportez-le en fichier audio.</span>
+          </p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">&#127908;</span>
+          <h3>
+            <span class="en">Decoder</span>
+            <span class="fr">D&eacute;codeur</span>
+          </h3>
+          <p>
+            <span class="en">Record audio or import a file containing Morse code. The app detects tones, auto-calibrates timing, and converts them back to text.</span>
+            <span class="fr">Enregistrez ou importez un fichier audio contenant du code Morse. L'app d&eacute;tecte les tonalit&eacute;s, calibre automatiquement et reconvertit en texte.</span>
+          </p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">&#128218;</span>
+          <h3>
+            <span class="en">Reference</span>
+            <span class="fr">R&eacute;f&eacute;rence</span>
+          </h3>
+          <p>
+            <span class="en">A searchable Morse code guide covering letters, numbers, and punctuation. Tap any character to hear its Morse code.</span>
+            <span class="fr">Un guide Morse consultable couvrant lettres, chiffres et ponctuation. Touchez un caract&egrave;re pour entendre son code Morse.</span>
+          </p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">&#128340;</span>
+          <h3>
+            <span class="en">History</span>
+            <span class="fr">Historique</span>
+          </h3>
+          <p>
+            <span class="en">All encoded and decoded messages are saved locally for later reference, with search and filtering.</span>
+            <span class="fr">Tous les messages encod&eacute;s et d&eacute;cod&eacute;s sont sauvegard&eacute;s localement avec recherche et filtrage.</span>
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Privacy callout -->
+    <section class="privacy-callout" id="privacy">
+      <div class="privacy-inner">
+        <span class="shield" aria-hidden="true">&#128274;</span>
+        <h2>
+          <span class="en">Privacy First</span>
+          <span class="fr">Vie priv&eacute;e avant tout</span>
+        </h2>
+        <p>
+          <span class="en">MorseModem works entirely offline. No data is collected, no ads, no tracking. Everything stays on your device.</span>
+          <span class="fr">MorseModem fonctionne enti&egrave;rement hors ligne. Aucune donn&eacute;e collect&eacute;e, pas de publicit&eacute;, pas de pistage. Tout reste sur votre appareil.</span>
+        </p>
+        <div class="privacy-badges">
+          <span class="privacy-badge">
+            <span class="en">100% Offline</span>
+            <span class="fr">100% Hors ligne</span>
+          </span>
+          <span class="privacy-badge">
+            <span class="en">No Data Collected</span>
+            <span class="fr">Aucune donn&eacute;e collect&eacute;e</span>
+          </span>
+          <span class="privacy-badge">
+            <span class="en">No Ads</span>
+            <span class="fr">Aucune pub</span>
+          </span>
+          <span class="privacy-badge">
+            <span class="en">100% Free</span>
+            <span class="fr">100% Gratuit</span>
+          </span>
+          <span class="privacy-badge">
+            <span class="en">On-Device</span>
+            <span class="fr">Sur l'appareil</span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Highlights -->
+    <section class="highlights">
+      <div class="highlights-grid">
+        <div class="highlight-item">
+          <span class="icon" aria-hidden="true">&#128243;</span>
+          <span>
+            <span class="en">Haptic Feedback</span>
+            <span class="fr">Retour haptique</span>
+          </span>
+        </div>
+        <div class="highlight-item">
+          <span class="icon" aria-hidden="true">&#128228;</span>
+          <span>
+            <span class="en">Import / Export Audio</span>
+            <span class="fr">Import / Export audio</span>
+          </span>
+        </div>
+        <div class="highlight-item">
+          <span class="icon" aria-hidden="true">&#127760;</span>
+          <span>
+            <span class="en">English &amp; French</span>
+            <span class="fr">Anglais &amp; Fran&ccedil;ais</span>
+          </span>
+        </div>
+        <div class="highlight-item">
+          <span class="icon" aria-hidden="true">&#128178;</span>
+          <span>
+            <span class="en">Completely Free</span>
+            <span class="fr">Enti&egrave;rement gratuit</span>
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="https://nicolas.lhomme.xyz">Nicolas Lhomme</a>
+      <a href="mailto:contact+morsemodem@lhomme.xyz">
+        <span class="en">Contact</span>
+        <span class="fr">Contact</span>
+      </a>
+      <a href="privacy.html">
+        <span class="en">Privacy Policy</span>
+        <span class="fr">Politique de confidentialit&eacute;</span>
+      </a>
+    </div>
+    <p>&copy; 2025 Nicolas Lhomme</p>
+  </footer>
+
+  <script>
+    // Theme toggle
+    const themeBtn = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    function applyTheme(theme) {
+      if (theme === 'system') {
+        html.removeAttribute('data-theme');
+      } else {
+        html.setAttribute('data-theme', theme);
+      }
+    }
+
+    function getStoredTheme() {
+      return localStorage.getItem('mm-theme') || 'system';
+    }
+
+    function isDark() {
+      const t = getStoredTheme();
+      if (t === 'dark') return true;
+      if (t === 'light') return false;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    function updateThemeIcon() {
+      themeBtn.textContent = isDark() ? '\u2600' : '\u263E';
+    }
+
+    applyTheme(getStoredTheme());
+    updateThemeIcon();
+
+    themeBtn.addEventListener('click', function() {
+      const next = isDark() ? 'light' : 'dark';
+      localStorage.setItem('mm-theme', next);
+      applyTheme(next);
+      updateThemeIcon();
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeIcon);
+
+    // Language toggle
+    const langBtn = document.getElementById('langToggle');
+
+    function getLang() {
+      const stored = localStorage.getItem('mm-lang');
+      if (stored) return stored;
+      return navigator.language.startsWith('fr') ? 'fr' : 'en';
+    }
+
+    function setLang(lang) {
+      html.setAttribute('lang', lang);
+      langBtn.textContent = lang === 'en' ? 'FR' : 'EN';
+      localStorage.setItem('mm-lang', lang);
+    }
+
+    setLang(getLang());
+
+    langBtn.addEventListener('click', function() {
+      setLang(getLang() === 'en' ? 'fr' : 'en');
+    });
+
+    // Morse animation
+    var morseMap = {
+      'M':['--'],'O':['---'],'R':['.-.'],'S':['...'],'E':['.'],
+      'C':['-.-.'],'D':['-..',],'L':['.-..']
+    };
+    var word = 'MORSE';
+    var morseStr = word.split('').map(function(c){ return (morseMap[c]||[''])[0]; }).join('   ');
+    var display = document.getElementById('morseDisplay');
+    var idx = 0;
+
+    function animateMorse() {
+      if (idx <= morseStr.length) {
+        display.textContent = morseStr.substring(0, idx);
+        idx++;
+        setTimeout(animateMorse, 100);
+      } else {
+        setTimeout(function(){ idx = 0; animateMorse(); }, 3000);
+      }
+    }
+    animateMorse();
+  </script>
+</body>
+</html>
